@@ -1,5 +1,6 @@
 package com.example.Repo
 
+import com.example.security.Jwtconfig
 import com.example.service.CreateUserParams
 import com.example.service.userService
 import com.example.utils.BaseResponse
@@ -13,7 +14,9 @@ class userRepoImpl(
       }else{
             val user=uservice.registeruser(params)
             if(user!=null){
-                BaseResponse.SuccessResponse(data=params, message = "Success user is registered successfully")
+                val token= Jwtconfig.instance.createAccessToken(user.Id)
+                user.authtoken=token
+                BaseResponse.SuccessResponse(data=user, message = "Success user is registered successfully")
             }else{
                BaseResponse.ErrorResponse()
             }
